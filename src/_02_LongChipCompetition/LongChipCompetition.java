@@ -11,10 +11,17 @@ public class LongChipCompetition {
      * Beatle classes. Make sure to initialize The Beatles before you start
      * your search.
      */
-    private ArrayList<Beatle> theBeatles = new ArrayList<Beatle>();
+    private static ArrayList<Beatle> theBeatles = new ArrayList<Beatle>();
 
     public static void main(String[] args) {
         LongChipCompetition lcc = new LongChipCompetition();
+        
+        int lastChip = 0;
+        int longestChip = 0;
+        
+        for (int i = 0; i < theBeatles.size(); i++) {
+        	// if (theBeatles.get(i).getChips().)
+        }
 
     }
 
