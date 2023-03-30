@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,7 +19,7 @@ public class GameBoard extends JFrame implements ActionListener {
     static Card secondSelectedCard = null;
     
     // 1. Initialize TOTAL_CARDS to 2;
-    static int TOTAL_CARDS = 0;
+    static int TOTAL_CARDS = 52;
     
     ArrayList<Card> cards;
     
@@ -43,33 +44,50 @@ public class GameBoard extends JFrame implements ActionListener {
         
         // 2. Initialize the ArrayList of Cards declared above
         
+        cards = new ArrayList<Card>();
         
         // 3. Create TOTAL_CARDS number of objects each with a value of 1.
         //    Also, add action listeners to each Card object and then add each
         //    of the Card objects to the ArrayList of Cards.
         
+        for (int i = 0; i < TOTAL_CARDS; i++) {
+        	Card card = new Card(i);
+        	card.setFaceUpIcon(Card.cardImagesPath + (i + 1) + ".png");
+        	card.addActionListener(this);
+        	cards.add(card);
+        }
         
         // 4. Use Collections.shuffle() method to randomize the order of
         //    the cards in the ArrayList
         
+        Collections.shuffle(cards);
         
         // 5. Initialize the panel variable declared above
         
+        panel = new JPanel();
         
         // 6. Add all of the Card objects to the panel
         
+        for (int i = 0; i < cards.size(); i++) {
+        	panel.add(cards.get(i));
+        }
         
         // 7. Call the setupGui() method to set up the frame
         
+        setupGui(cards);
         
         // 8. Call the startGame() method to start the game
+        
+        startGame();
         
     }
 
     // 9. Fill in the drawCards method to draw all the cards in the ArrayList.
     //    Run your code and verify 2 cards are displayed and the game works.
     public void drawCards() {
-        
+        for (int i = 0; i < TOTAL_CARDS; i++) {
+        	cards.get(i).draw();
+        }
     }
     
     // 10. 
@@ -85,6 +103,8 @@ public class GameBoard extends JFrame implements ActionListener {
     // the images in the CardImages folder and the setFaceUpIcon() method.
     // Example:
     // card.setFaceUpIcon(Card.cardImagesPath + (i+1) + ".png");
+    
+    
     
     
     public void setupGui(ArrayList<Card> cards) {
