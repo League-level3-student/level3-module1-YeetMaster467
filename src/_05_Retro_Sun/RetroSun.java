@@ -11,6 +11,13 @@ import processing.core.PApplet;
 public class RetroSun extends PApplet {
     static final int WIDTH = 800;
     static final int HEIGHT = 600;
+    
+    int sunRadius = 200;
+    
+    float y = WIDTH / 2;
+	float h = 40;
+	float x = 400 - sunRadius;
+	float w = 2 * sunRadius;
 
     // RGB colors
     int[] sunColors = {
@@ -24,12 +31,14 @@ public class RetroSun extends PApplet {
     @Override
     public void settings() {
         // 1. Set the size of your sketch to at least 800 width, 600 height
+    	size(WIDTH, HEIGHT);
         
     }
 
     @Override
     public void setup() {
         // 2. Set bgColor as the background color
+    	background(bgColor);
         
     }
 
@@ -42,10 +51,13 @@ public class RetroSun extends PApplet {
         // Draw an ellipse for the sun in the center of the window
         // Use fill(sunColors[0]) to make it yellow
         // Use noStroke() to remove the black outline
-
+    	
         // Do you see a yellow sun like in the 1st image?
         // If not, fix your code before proceeding.
-
+    	
+    	fill(sunColors[0]);
+    	noStroke();
+    	ellipse(400, 300, sunRadius * 2, sunRadius * 2);
         
         /*
          * PART 2: Drawing a color gradient on the sun
@@ -57,13 +69,26 @@ public class RetroSun extends PApplet {
         // the pixels[] array
         // https://processing.org/reference/loadPixels_.html
 
+    	loadPixels();
+    	
         // We want to change the color of our sun so use an if statement
         // to check if the pixel is the color of the yellow circle.
 
         // If pixel[i] is the same color as the color of our circle (sunColors[0]),
         // we need to map the pixel to a color in our sunColors[] array
         // (see 2nd gradient image in RetroSun.html)
-
+    	
+    	for (int i = 0; i < pixels.length; i++) {
+    		if (pixels[i] == sunColors[0]) {
+    			int y = i / WIDTH;
+    			float step = map(y, (HEIGHT / 2) - sunRadius, HEIGHT / 2 + sunRadius, 0, 1);
+    			int c = interpolateColor(sunColors, step);
+        		pixels[i] = c;
+        	}
+    	}
+    	
+    	updatePixels();
+    	
         // The top of the sun is yellow (sunColors[0]) and the bottom
         // of the sun is red (sunColors[sunColors.length - 1]
 
@@ -91,7 +116,9 @@ public class RetroSun extends PApplet {
          */
 
         // Set the fill color to the background color
-
+    	
+    	fill(bgColor);
+    	
         // To draw each rectangle we need to find its x, y, width, height
         // *The y position can be any value within the sun:
         //  float y = width / 2;
@@ -103,7 +130,9 @@ public class RetroSun extends PApplet {
         //  float w = 2 * sunRadius
         
         // Do you see a section missing from the sun like in the 3rd image?
-
+    	
+    	
+    	rect(x, y, w, h);
         
         /*
          * PART 4: Moving the missing sun sections
@@ -117,15 +146,22 @@ public class RetroSun extends PApplet {
         // draw function AND initialize it in the setup() function.
 
         // Do you see the rectangle moving upwards?
-
-        // Pick a y positon to be the location when the sections stop moving up.
-        // If the rectangle's y positon is above this, move the rectangle's
+    	
+    	y -= 1;
+    	h = map(y, 150, 450, 1, 40);
+    	
+        // Pick a y position to be the location when the sections stop moving up.
+        // If the rectangle's y position is above this, move the rectangle's
         // y position back to the bottom of the sun.
-
+    	
+    	if (y <= 150) {
+    		y = 450;
+    	}
+    	
         // Does the rectangle move back to the bottom?
 
         // Decrease the the height of the rectangle as it moves upwards.
-        // Similar to the y positon, a float variable for the height needs to be
+        // Similar to the y position, a float variable for the height needs to be
         // created if it doesn't already exist.
 
         // Adjust the amount to decrease so that it disappears close to the top.
@@ -146,7 +182,8 @@ public class RetroSun extends PApplet {
         // code you wrote for the 1 missing sun section.
         // HINT: You can use the Rectangle class defined below to create
         // a list of Rectangles.
-
+    	
+    	
         
         /*
          * PART 6: Adding extras
