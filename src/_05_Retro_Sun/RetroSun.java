@@ -18,6 +18,7 @@ public class RetroSun extends PApplet {
 	float h = 40;
 	float x = 400 - sunRadius;
 	float w = 2 * sunRadius;
+	Rectangle[] rects = new Rectangle[5];
 
     // RGB colors
     int[] sunColors = {
@@ -39,6 +40,11 @@ public class RetroSun extends PApplet {
     public void setup() {
         // 2. Set bgColor as the background color
     	background(bgColor);
+    
+    	for (int i = 0; i < rects.length; i++) {
+    		rects[i] = new Rectangle(x, y + i * 50, w, h);
+    	}
+    	
         
     }
 
@@ -183,6 +189,25 @@ public class RetroSun extends PApplet {
         // HINT: You can use the Rectangle class defined below to create
         // a list of Rectangles.
     	
+    	/*  
+    	 *	fill(bgColor);
+    	 *	rect(x, y, w, h);
+    	 *	y -= 1;
+    	 *	h = map(y, 150, 450, 1, 40);
+    	 *	if (y <= 150) {
+    	 *		y = 450;
+     	 *	}
+     	 *
+     	 */
+    	
+    	for (int i = 0; i < rects.length; i++) {
+    		rect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+    		rects[i].y -= 1;
+    		rects[i].h = map(rects[i].y, 150, 450, 1, 40);
+    		if (rects[i].y <= 150) {
+    			rects[i].y = 450;
+    	    }
+    	}
     	
         
         /*
