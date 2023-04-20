@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.junit.platform.commons.function.Try;
+
 public class _02_LogSearch implements ActionListener {
 	/*
 	 * Crate a HashMap of Integers for the keys and Strings for the values. Create a
@@ -37,11 +39,13 @@ public class _02_LogSearch implements ActionListener {
 	JButton addEntry = new JButton("Add Entry");
 	JButton searchByID = new JButton("Search By ID");
 	JButton viewList = new JButton("View List");
+	JButton deleteEntry = new JButton("Delete Entry");
 
 	public void showWindow() {
 		panel.add(addEntry);
 		panel.add(searchByID);
 		panel.add(viewList);
+		panel.add(deleteEntry);
 		frame.add(panel);
 		frame.pack();
 		frame.setTitle("Log Search");
@@ -50,6 +54,7 @@ public class _02_LogSearch implements ActionListener {
 		addEntry.addActionListener(this);
 		searchByID.addActionListener(this);
 		viewList.addActionListener(this);
+		deleteEntry.addActionListener(this);
 	}
 
 	@Override
@@ -59,22 +64,27 @@ public class _02_LogSearch implements ActionListener {
 		if (buttonPressed.equals(addEntry)) {
 			String idString = JOptionPane.showInputDialog("Enter the ID number");
 			String name = JOptionPane.showInputDialog("Enter the name");
-			int id = Integer.parseInt(idString);
-			logs.put(id, name);
-			JOptionPane.showMessageDialog(null, "Entry added!");
+			try {
+				int id = Integer.parseInt(idString);
+				logs.put(id, name);
+				JOptionPane.showMessageDialog(null, "Entry added!");
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(null, "That isn't a valid ID");
+			}
 		} else if (buttonPressed.equals(searchByID)) {
 			String idString = JOptionPane.showInputDialog("Enter the ID number");
 			int id = Integer.parseInt(idString);
 			if (logs.get(id) != null) {
-				JOptionPane.showMessageDialog(null, "ID: " + id + "Name: " + logs.get(id));
+				JOptionPane.showMessageDialog(null, "ID: " + id + " Name: " + logs.get(id));
 			} else {
 				JOptionPane.showMessageDialog(null, "ID not found");
 			}
 		} else if (buttonPressed.equals(viewList)) {
 			String list = "";
-			for (int i = 0; i < logs.size(); i++) {
-				if (logs.get(i) != null) {
-					list += "ID: " + i + " NAME: " + logs.get(i) + "\n";
+			for (Integer key: logs.keySet()) {
+				System.out.println(key);
+				if (logs.get(key) != null) {
+					list += "ID: " + key + " NAME: " + logs.get(key) + "\n";
 				}
 			}
 			if (list.equals("")) {
@@ -82,6 +92,22 @@ public class _02_LogSearch implements ActionListener {
 			} else {
 				JOptionPane.showMessageDialog(null, list);
 			}
+		} else if (buttonPressed.equals(deleteEntry)) {
+			String idString = JOptionPane.showInputDialog("Enter the ID number");
+			
+			try {
+				int id = Integer.parseInt(idString);
+				
+				if (logs.containsKey(id)) {
+					logs.remove(id);
+					JOptionPane.showMessageDialog(null, "Log Sucessfully Deleted!");
+				} else {
+					JOptionPane.showMessageDialog(null, "ID does not exist");
+				}
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(null, "That isn't a valid ID");
+			}
+			
 		}
 
 	}
