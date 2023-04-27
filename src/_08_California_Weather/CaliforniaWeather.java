@@ -1,6 +1,8 @@
 package _08_California_Weather;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 /*
  * OBJECTIVE:
@@ -28,18 +30,36 @@ import java.util.HashMap;
  */
 
 public class CaliforniaWeather {
-    
-    void start() {
-        HashMap<String, WeatherData> weatherData = Utilities.getWeatherData();
-        
-        // All city keys have the first letter capitalized of each word
-        String cityName = Utilities.capitalizeWords( "National City" );
-        WeatherData datum = weatherData.get(cityName);
-        
-        if( datum == null ) {
-            System.out.println("Unable to find weather data for: " + cityName);
-        } else {
-            System.out.println(cityName + " is " + datum.weatherSummary + " with a temperature of " + datum.temperatureF + " F");
-        }
-    }
+
+	void start() {
+		HashMap<String, WeatherData> weatherData = Utilities.getWeatherData();
+		Scanner s = new Scanner(System.in);
+		ArrayList<String> cities = new ArrayList<String>();
+
+		// All city keys have the first letter capitalized of each word
+		System.out.println("Pick a mode, enter 'c' for determining the weather of a city,\n or enter 'w' to determine cities that have the specified weather.");
+		char mode = s.nextLine().charAt(0);
+		System.out.println("Enter your weather or city.");
+		String input = Utilities.capitalizeWords(s.nextLine());
+		WeatherData datum = weatherData.get(input);
+		
+		if (mode == 'w') {
+			for (String key : weatherData.keySet()) {
+				if (weatherData.get(key).weatherSummary.equals(input)) {
+					cities.add(key);
+				}
+			}
+			if (!cities.isEmpty()) {
+				System.out.println(cities.toString());
+			} 
+		} else if (mode == 'c') {
+			System.out.println(input + " is " + datum.weatherSummary + " with a temperature of " + datum.temperatureF + " F");
+
+		}
+		//if (datum == null) {
+			// System.out.println("Unable to find weather data for: " + input);
+			// return;
+		// }
+		
+	}
 }
