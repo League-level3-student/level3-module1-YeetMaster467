@@ -37,11 +37,23 @@ public class CaliforniaWeather {
 		ArrayList<String> cities = new ArrayList<String>();
 
 		// All city keys have the first letter capitalized of each word
-		System.out.println("Pick a mode, enter 'c' for determining the weather of a city,\n or enter 'w' to determine cities that have the specified weather.");
+		System.out.println("Pick a mode, enter 'c' for determining the weather of a city,\nenter 'w' to determine cities that have the specified weather,\nor enter 't' to determine cities in a specified range of tempature.");
 		char mode = s.nextLine().charAt(0);
-		System.out.println("Enter your weather or city.");
-		String input = Utilities.capitalizeWords(s.nextLine());
-		WeatherData datum = weatherData.get(input);
+		String input = null;
+		WeatherData datum = null;
+		double minTemp = 0;
+		double maxTemp = 0;
+		
+		if (mode != 't') {
+			System.out.println("Enter your weather or city.");
+			input = Utilities.capitalizeWords(s.nextLine());
+			datum = weatherData.get(input);
+		} else {
+			System.out.println("Enter your minimum tempature in fahrenheit."); 
+			minTemp = s.nextDouble();
+			System.out.println("Enter your maximum tempature in fahrenheit.");
+			maxTemp = s.nextDouble();
+		}
 		
 		if (mode == 'w') {
 			for (String key : weatherData.keySet()) {
@@ -54,12 +66,22 @@ public class CaliforniaWeather {
 			} 
 		} else if (mode == 'c') {
 			System.out.println(input + " is " + datum.weatherSummary + " with a temperature of " + datum.temperatureF + " F");
-
+		} else if (mode == 't') {
+			
+			for (String key : weatherData.keySet()) {
+				if (weatherData.get(key).temperatureF >= minTemp && weatherData.get(key).temperatureF <= maxTemp ) {
+					cities.add(key);
+				}
+			}
+			if (!cities.isEmpty()) {
+				System.out.println(cities.toString());
+			} 
+			
+		} else {
+			System.out.println("Unable to find weather data for: " + input);
+			return;
 		}
-		//if (datum == null) {
-			// System.out.println("Unable to find weather data for: " + input);
-			// return;
-		// }
+		
 		
 	}
 }

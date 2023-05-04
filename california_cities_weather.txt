@@ -990,3 +990,4 @@ Lancaster, Light Rain, 38.49
 Middletown, Mostly Cloudy, 37.44
 Monterey, Mostly Cloudy, 29.91
 Orange, Mostly Cloudy, 38.44
+DooDoo Fart, Mostly Cloudy, 420
