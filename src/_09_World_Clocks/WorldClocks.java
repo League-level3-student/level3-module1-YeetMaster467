@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -42,13 +43,21 @@ public class WorldClocks implements ActionListener {
 
     JFrame frame;
     JPanel panel;
+    JButton addTime;
     JTextArea chicagoTextArea;
     JTextArea seattleTextArea;
+    JTextArea beijingTextArea;
+    JTextArea londonTextArea;
     
     String chicagoTimeStr;
+    String seattleTimeStr;
+    String beijingTimeStr;
+    String londonTimeStr;
     
     String chicagoDateStr;
     String seattleDateStr;
+    String beijingDateStr;
+    String londonDateStr;
     
     HashMap<String, TimeZone> times = new HashMap<String, TimeZone>();
     
@@ -59,15 +68,24 @@ public class WorldClocks implements ActionListener {
         // The format for the city must be: city, country (all caps)
         chicagoDateStr = getDateStr("Chicago, US");
         seattleDateStr = getDateStr("Seattle, US");
-        
+        beijingDateStr = getDateStr("Beijing, CN");
+        londonDateStr = getDateStr("London, GB");
+        times.put("Seattle, US", clockUtil.getTimeZoneFromCityName("Seattle, US"));
+        times.put("Chicago, US", clockUtil.getTimeZoneFromCityName("Chicago, US"));
+        times.put("Beijing, CN", clockUtil.getTimeZoneFromCityName("Beijing, CN"));
+        times.put("London, GB", clockUtil.getTimeZoneFromCityName("London, GB"));
         
         System.out.println(chicagoDateStr);
 
         // Sample starter program
         frame = new JFrame();
         panel = new JPanel();
+        addTime = new JButton("Add Clock");
+        addTime.addActionListener(this);
         chicagoTextArea = new JTextArea();
         seattleTextArea = new JTextArea();
+        beijingTextArea = new JTextArea();
+        londonTextArea = new JTextArea();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setSize(100, 100);
@@ -76,7 +94,11 @@ public class WorldClocks implements ActionListener {
         chicagoTextArea.setText("Chicago, US" + "\n" + chicagoDateStr);
         panel.add(seattleTextArea);
         seattleTextArea.setText("Seattle, US" + "\n" + seattleDateStr);
-        
+        panel.add(beijingTextArea);
+        beijingTextArea.setText("Beijing, China" + "\n" + beijingDateStr);
+        panel.add(addTime);
+        panel.add(londonTextArea);
+        londonTextArea.setText("London, UK" + "\n" + londonDateStr);
         
         // This Timer object is set to call the actionPerformed() method every
         // 1000 milliseconds
@@ -86,13 +108,15 @@ public class WorldClocks implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        Calendar c = Calendar.getInstance(chicagoTimeZone);
-        String militaryTime = c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
-        String twelveHourTime = " [" + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND) + "]";
-        chicagoTimeStr = militaryTime + twelveHourTime;
+        chicagoTimeStr = getTimeStr("Chicago, US");
+        seattleTimeStr = getTimeStr("Seattle, US");
+        beijingTimeStr = getTimeStr("Beijing, CN");
+        londonTimeStr = getTimeStr("London, GB");
         
-        System.out.println(chicagoTimeStr);
         chicagoTextArea.setText("Chicago, US" + "\n" + chicagoDateStr + "\n" + chicagoTimeStr);
+        seattleTextArea.setText("Seattle, US" + "\n" + seattleDateStr + "\n" + seattleTimeStr);
+        beijingTextArea.setText("Beijing, China" + "\n" + beijingDateStr + "\n" + beijingTimeStr);
+        londonTextArea.setText("London, UK" + "\n" + londonDateStr + "\n" + londonTimeStr);
         frame.pack();
     }
     
@@ -102,9 +126,18 @@ public class WorldClocks implements ActionListener {
         Calendar calendar = Calendar.getInstance(timeZone);
         String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
         String dayOfWeek = calendar.getDisplayName( Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-        chicagoDateStr = dayOfWeek + " " + month + " " + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
+        String dateStr = dayOfWeek + " " + month + " " + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
         
-        return chicagoDateStr;
+        return dateStr;
+    }
+    
+    public String getTimeStr(String city) {
+    	Calendar c = Calendar.getInstance(times.get(city));
+        String militaryTime = c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
+        String twelveHourTime = " [" + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND) + "]";
+        String timeStr = militaryTime + twelveHourTime;
+        
+        return timeStr;
     }
     
 }
