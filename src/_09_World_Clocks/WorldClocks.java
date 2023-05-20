@@ -6,9 +6,11 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap.KeySetView;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
@@ -47,17 +49,14 @@ public class WorldClocks implements ActionListener {
     JTextArea chicagoTextArea;
     JTextArea seattleTextArea;
     JTextArea beijingTextArea;
-    JTextArea londonTextArea;
     
     String chicagoTimeStr;
     String seattleTimeStr;
     String beijingTimeStr;
-    String londonTimeStr;
     
     String chicagoDateStr;
     String seattleDateStr;
     String beijingDateStr;
-    String londonDateStr;
     
     HashMap<String, TimeZone> times = new HashMap<String, TimeZone>();
     
@@ -69,11 +68,9 @@ public class WorldClocks implements ActionListener {
         chicagoDateStr = getDateStr("Chicago, US");
         seattleDateStr = getDateStr("Seattle, US");
         beijingDateStr = getDateStr("Beijing, CN");
-        londonDateStr = getDateStr("London, GB");
         times.put("Seattle, US", clockUtil.getTimeZoneFromCityName("Seattle, US"));
         times.put("Chicago, US", clockUtil.getTimeZoneFromCityName("Chicago, US"));
         times.put("Beijing, CN", clockUtil.getTimeZoneFromCityName("Beijing, CN"));
-        times.put("London, GB", clockUtil.getTimeZoneFromCityName("London, GB"));
         
         System.out.println(chicagoDateStr);
 
@@ -85,7 +82,6 @@ public class WorldClocks implements ActionListener {
         chicagoTextArea = new JTextArea();
         seattleTextArea = new JTextArea();
         beijingTextArea = new JTextArea();
-        londonTextArea = new JTextArea();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setSize(100, 100);
@@ -97,8 +93,6 @@ public class WorldClocks implements ActionListener {
         panel.add(beijingTextArea);
         beijingTextArea.setText("Beijing, China" + "\n" + beijingDateStr);
         panel.add(addTime);
-        panel.add(londonTextArea);
-        londonTextArea.setText("London, UK" + "\n" + londonDateStr);
         
         // This Timer object is set to call the actionPerformed() method every
         // 1000 milliseconds
@@ -108,16 +102,31 @@ public class WorldClocks implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        chicagoTimeStr = getTimeStr("Chicago, US");
-        seattleTimeStr = getTimeStr("Seattle, US");
-        beijingTimeStr = getTimeStr("Beijing, CN");
-        londonTimeStr = getTimeStr("London, GB");
-        
-        chicagoTextArea.setText("Chicago, US" + "\n" + chicagoDateStr + "\n" + chicagoTimeStr);
-        seattleTextArea.setText("Seattle, US" + "\n" + seattleDateStr + "\n" + seattleTimeStr);
-        beijingTextArea.setText("Beijing, China" + "\n" + beijingDateStr + "\n" + beijingTimeStr);
-        londonTextArea.setText("London, UK" + "\n" + londonDateStr + "\n" + londonTimeStr);
-        frame.pack();
+    	String city = null;
+        if (arg0.getSource().equals(addTime)) {
+        	city = JOptionPane.showInputDialog("Enter your desired city in the format of\nCity Name, UN Country Abbreviation in all caps.\nFor example: London, GB");
+        	times.put(city, clockUtil.getTimeZoneFromCityName(city));
+        	
+        } else {
+        	chicagoTimeStr = getTimeStr("Chicago, US");
+            seattleTimeStr = getTimeStr("Seattle, US");
+            beijingTimeStr = getTimeStr("Beijing, CN");
+            
+            chicagoTextArea.setText("Chicago, US" + "\n" + chicagoDateStr + "\n" + chicagoTimeStr);
+            seattleTextArea.setText("Seattle, US" + "\n" + seattleDateStr + "\n" + seattleTimeStr);
+            beijingTextArea.setText("Beijing, China" + "\n" + beijingDateStr + "\n" + beijingTimeStr);
+            
+            for (String i: times.keySet()) {
+            	if (!i.equals("Chicago, US") || !i.equals("Seattle, US") || !i.equals("Beijing, CN") || !i.equals(null)) {
+            		JTextArea t = new JTextArea();
+            		String timeStr = getTimeStr(city);
+            		String dateStr = getDateStr(city);
+            		t.setText(city + "\n" + dateStr + "\n" + timeStr);
+            	}
+            }
+            
+            frame.pack();
+        }
     }
     
     public String getDateStr(String city) {
